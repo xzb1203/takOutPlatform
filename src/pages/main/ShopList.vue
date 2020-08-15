@@ -3,7 +3,7 @@
     <div slot="header" class="clearfix">
       <span>商品列表</span>
     </div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" v-loading="loading">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
@@ -17,7 +17,7 @@
               <span>{{ props.row.category }}</span>
             </el-form-item>
             <el-form-item label="商品价格">
-              <span>{{ props.row.price }}</span>
+              <span>{{ props.row.price}}</span>
             </el-form-item>
             <el-form-item label="商品图片">
               <img :src="props.row.imgUrl" alt class="shop-pic" />
@@ -42,7 +42,7 @@
       <el-table-column label="商品价格" prop="price"></el-table-column>
       <el-table-column label="商品图片" prop="imgUrl">
         <template scope="props">
-          <img :src="props.row.imgUrl" width="40" height="40" />
+          <img :src="props.row.imgUrl" width="80" height="80" />
         </template>
       </el-table-column>
       <el-table-column label="商品描述" prop="goodsDesc"></el-table-column>
@@ -88,7 +88,12 @@
           >
             <i v-show="!form.imgUrl" class="el-icon-plus"></i>
             <!-- 服务器图片地址 -->
-            <img style="width:100px" v-show="form.imgUrl" :src="'http://127.0.0.1:5000/upload/imgs/goods_img/'+form.imgUrl" class="avatar"/>
+            <img
+              style="width:100px"
+              v-show="form.imgUrl"
+              :src="'http://127.0.0.1:5000/upload/imgs/goods_img/'+form.imgUrl"
+              class="avatar"
+            />
           </el-upload>
         </el-form-item>
         <el-form-item label="商品描述" :label-width="formLabelWidth">
@@ -111,6 +116,8 @@ import { getChinatime } from "@/utils/utils"; //时间格式渲染
 export default {
   data() {
     return {
+      //加载中
+      loading: true,
       data: [],
       tableData: [],
       currentPage: 1,
@@ -150,8 +157,8 @@ export default {
       this.form.name = row.name;
       this.form.category = row.category;
       this.form.price = row.price;
-      this.form.imgUrl =row.imgUrl;
-        this.form.imgUrl =row.imgUrl.replace(
+      this.form.imgUrl = row.imgUrl;
+      this.form.imgUrl = row.imgUrl.replace(
         "http://127.0.0.1:5000/upload/imgs/goods_img/",
         ""
       );
@@ -227,10 +234,13 @@ export default {
     },
   },
   created() {
-    //获取商品列表
-    this.getProduct();
-    //数据渲染
-    this.getList();
+      (this.loading = true),
+        //获取商品列表
+        this.getProduct();
+      //数据渲染
+      this.getList();
+      this.loading = false;
+
   },
 };
 </script>
@@ -253,9 +263,6 @@ export default {
   clear: both;
 }
 
-.box-card {
-  width: 100%;
-}
 .page {
   margin: 10px 0;
 }

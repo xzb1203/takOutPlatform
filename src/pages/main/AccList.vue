@@ -80,7 +80,7 @@ export default {
     return {
       tableData: [],
       currentPage: 1,
-      pageSize: 3,
+      pageSize: 1,
       total: 0,
       tableChecked: [],
       ids: [],

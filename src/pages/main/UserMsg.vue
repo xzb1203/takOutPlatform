@@ -11,7 +11,7 @@
         <span>账号:&emsp;{{msg.account}}</span>
         <el-divider></el-divider>
         <span>用户组:&emsp;{{msg.userGroup}}</span>
-        <el-divider></el-divider>
+          <el-divider></el-divider>
         <span>创建时间:&emsp;{{$moment(msg.ctime).format('YYYY/MM/DD')}}</span>
         <el-divider></el-divider>
         <span>

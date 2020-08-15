@@ -28,13 +28,8 @@
       <el-form-item label="店铺图片">
         <div class="demo-image__placeholder">
           <div class="block">
-            <!-- <el-image
-              v-for="(item,index) in form.pics"
-              :key="index"
-              :src="SHOP_PIC+form.pics[index]"
-            ></el-image>-->
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://127.0.0.1:5000/shop/upload"
               list-type="picture-card"
               :on-remove="handleRemove"
               :on-success="handleAvatarSuccess"
@@ -45,23 +40,7 @@
           </div>
         </div>
       </el-form-item>
-      <!-- <el-form-item label="添加图片">
-        <div class="demo-image__placeholder">
-          <div class="block">
-            <el-upload
-              class="headPic"
-              action="http://127.0.0.1:5000/shop/upload"
-              list-type="picture-card"
-              :on-success="handleAvatarSuccess"
-            >
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt />
-            </el-dialog>
-          </div>
-        </div>
-      </el-form-item>-->
+
       <!-- 店铺名称 -->
       <el-form-item label="配送费">
         <el-input v-model="form.deliveryPrice"></el-input>
@@ -76,7 +55,11 @@
       </el-form-item>
       <!-- 店铺评分 -->
       <el-form-item label="店铺评分">
-        <el-input v-model="form.score"></el-input>
+        <!-- <el-input v-model="form.score"></el-input> -->
+        <el-rate
+          v-model="form.score"
+          :colors="colors">
+        </el-rate>
       </el-form-item>
       <!-- 销量 -->
       <el-form-item label="销量">
@@ -124,14 +107,15 @@ export default {
         deliveryPrice: "",
         deliveryTime: "",
         description: "",
-        score: "",
+        score: null,
         sellCount: "",
         supports: "",
         pics: [],
         minPrice: "",
-        date: [],
+        date: [new Date('2016, 9, 10, 8, 40'), new Date('2016, 9, 10, 9, 40')],
         headPicUrl: "",
       },
+       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       //店铺图片回填数据
       fileList: [],
       // 店铺图片上传接口
@@ -157,8 +141,7 @@ export default {
     },
     //图片移出
     handleRemove(res) {
-      this.fileList.splice(this.fileList.indexOf(res.name), 1);
-      console.log(this.fileList);
+      this.form.pics.splice(this.form.pics.indexOf(res.name), 1);
     },
     //数据渲染
     getShopList() {
@@ -172,7 +155,6 @@ export default {
         });
       });
     },
-
     //提交修改
     submit() {
       let file = JSON.parse(JSON.stringify(this.form));
@@ -181,11 +163,12 @@ export default {
         getChinatime(file.date[0]),
         getChinatime(file.date[1])
       );
+      console.log(file);
       // 转换活动内容格式
       file.supports = JSON.stringify(file.supports);
       // 转换图片格式
       file.pics = JSON.stringify(file.pics);
-      console.log(file);
+      console.log(file.pics);
       shopEdit(file).then((res) => {
         if (res.data.code == 0) {
           this.$message.success("店铺信息成功!");
@@ -218,5 +201,8 @@ export default {
 }
 .avatar {
   width: 150px;
+}
+.el-rate{
+  padding-top:10px ;
 }
 </style>

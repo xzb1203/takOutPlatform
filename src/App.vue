@@ -19,5 +19,5 @@ export default {
   ul li{
     list-style: none;
   }
-  
+
 </style>

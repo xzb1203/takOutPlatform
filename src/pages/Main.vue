@@ -1,8 +1,8 @@
 <template>
   <el-container>
-    <el-aside width="200px">
+    <el-aside width="220px">
       <h1 class="shopName">
-        <i class="el-icon-platform-eleme"></i>外面商家中心
+        <i class="el-icon-platform-eleme"></i>欧乐超市商家中心
       </h1>
       <!-- 左侧树菜单 -->
       <el-menu

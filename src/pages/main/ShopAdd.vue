@@ -84,7 +84,7 @@ export default {
     addMer() {
       add(this.form.name,this.form.category,this.form.price,this.form.imgUrl,this.form.goodsDesc).then(res => {
              if (res.data.code == 0) {
-              window.location.hash = '/main/ShopList'
+              // window.location.hash = '/main/ShopList'
               this.$message.success("商品添加成功!");
              }
       });

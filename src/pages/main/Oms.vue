@@ -12,14 +12,14 @@
           <el-input v-model="formInline.phone" placeholder="手机号"></el-input>
         </el-form-item>
         <el-form-item label="订单状态">
-          <el-select v-model="formInline.region" placeholder="订单状态">
+          <el-select v-model="formInline.region" placeholder="订单状态" clearable>
             <el-option v-for="item in option" :label="item" :value="item" :key="item"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <!-- 时间选择组件 -->
       <div class="echarts-top">
-        <span>选择</span>
+        <div class="setTime">选择时间</div>
         <el-date-picker
           v-model="value1"
           type="daterange"
@@ -30,7 +30,7 @@
         <el-button type="primary" @click="clickSearch">查询</el-button>
       </div>
       <!-- 表单 -->
-      <el-table :data="tableData" border style="width: 100%">
+      <el-table :data="tableData" border style="width: 100%" v-loading="loading">
         <el-table-column fixed prop="orderNo" label="订单号"></el-table-column>
         <el-table-column prop="orderTime" label="下单时间" width="200px"></el-table-column>
         <el-table-column prop="phone" label="手机号" width="180px"></el-table-column>
@@ -63,7 +63,7 @@
       </div>
       <!-- 分页end -->
       <!-- 查看弹窗star -->
-      <el-dialog title="订单详情" :visible.sync="dialogFormVisible" width="40%">
+      <el-dialog title="订单详情" width="40%">
         <el-form :model="view">
           <el-form-item label="订单ID" :label-width="formLabelWidth">
             <span>{{view.id}}</span>
@@ -96,10 +96,6 @@
             <span>{{view.orderState}}</span>
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-        </div>
       </el-dialog>
       <!-- 查看弹窗end -->
 
@@ -133,9 +129,11 @@
           <el-form-item label="订单金额" :label-width="formLabelWidth">
             <el-input v-model="editobj.orderAmount"></el-input>
           </el-form-item>
-          <el-form-item label="订单状态" :label-width="formLabelWidth">
-            <el-input v-model="editobj.orderState"></el-input>
-          </el-form-item>
+           <el-form-item label="订单状态" :label-width="formLabelWidth">
+          <el-select v-model="editobj.orderState" placeholder="订单状态" clearable>
+            <el-option v-for="item in option" :label="item" :value="item" :key="item"></el-option>
+          </el-select>
+          </el-form-item> 
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible2 = false">取 消</el-button>
@@ -155,8 +153,10 @@ import { getChinatime } from "@/utils/utils"; //时间格式渲染
 export default {
   data() {
     return {
+      //加载状态
+      loading: true,
       //订单状态
-      option:['已受理','派送中','已完成','全部'],
+      option: ["已受理", "派送中", "已完成"],
       //时间值
       value1: "",
       formInline: {
@@ -173,8 +173,6 @@ export default {
       total: 50,
       //查看数据列表
       gridData: [],
-      dialogTableVisible: false,
-      dialogFormVisible: false,
       dialogTableVisible2: false,
       dialogFormVisible2: false,
       //查看页value值
@@ -201,7 +199,7 @@ export default {
         this.editobj.deliveryTime,
         this.editobj.remarks,
         this.editobj.orderAmount,
-        this.editobj.orderState,
+        this.editobj.orderState
       ).then((res) => {
         if (res.data.code == 0) {
           this.$message.success("修改成功!");
@@ -217,9 +215,8 @@ export default {
     //查看功能
     handleClick(row) {
       //显示编辑对话框
-      this.dialogFormVisible = true;
       //渲染数据到对话框
-      this.view={...row}
+      this.view = { ...row };
     },
     //每页显示条目个数
     handleSizeChange(val) {
@@ -233,6 +230,7 @@ export default {
     },
     //数据渲染
     getApply() {
+      this.loading = true;
       orderList(this.currentPage, this.pagesize).then((res) => {
         let arr = res.data.data;
         for (let item of arr) {
@@ -242,14 +240,26 @@ export default {
         this.tableData = arr; //数据
         this.total = res.data.total;
       });
+      this.loading = false;
     },
+
     //查询功能
     clickSearch() {
+      //判断用户是否输入
+      if (
+        this.formInline.user == "" &&
+        this.formInline.user == "" &&
+        this.formInline.phone == "" &&
+        this.formInline.region == "" &&
+        this.value1 == ""
+      ) {
+        this.$message.error("至少输入一个查询项!!!");
+        return false;
+      }
       let timerArr = [
         getChinatime(this.value1[0]),
         getChinatime(this.value1[1]),
       ];
-
       search(
         this.currentPage,
         this.pagesize,
@@ -259,18 +269,20 @@ export default {
         this.formInline.region,
         timerArr
       ).then((res) => {
-          for (let item of res.data.data) {
-            item.orderTime = getTimer(item.orderTime);
-            item.deliveryTime = getTimer(item.deliveryTime);
-          }
-          this.$message.success("查询成功!!!");
-          this.tableData = res.data.data;
-          this.total=res.data.total;
+        for (let item of res.data.data) {
+          item.orderTime = getTimer(item.orderTime);
+          item.deliveryTime = getTimer(item.deliveryTime);
+        }
+        this.$message.success("查询成功!!!");
+        this.tableData = res.data.data;
+        this.total = res.data.total;
       });
     },
   },
   created() {
+    this.loading = true;
     this.getApply();
+    this.loading = false;
   },
 };
 </script>
@@ -295,5 +307,9 @@ export default {
 }
 .time-sope {
   margin: 0 10px;
+}
+.setTime{
+  font-size: 12px;
+  margin-right: 7px;
 }
 </style>

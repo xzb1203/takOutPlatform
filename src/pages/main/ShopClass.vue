@@ -2,7 +2,6 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>商品分类</span>
-      <!-- <el-button type="primary" @click="dialogFormVisible = true">添加分类</el-button> -->
       <el-button type="primary" @click="addClass">添加分类</el-button>
     </div>
     <!-- 添加分类弹窗 -->
@@ -76,8 +75,8 @@ export default {
     return {
       // 分页数据
       currentPage: 1,
-      pageSize: 5,
-      total: 100,
+      pageSize: 3,
+      total: 0,
       className: "", //分类名称
       dialogTableVisible: false,
       dialogFormVisible: false,
@@ -124,11 +123,13 @@ export default {
     },
     //每页条数
     handleSizeChange(val) {
+      console.log(val);
       this.pageSize = val;
       this.getList();
     },
     //当前的页数
     handleCurrentChange(val) {
+      console.log(val);
       this.currentPage = val;
       this.getList();
     },
@@ -154,7 +155,7 @@ export default {
       catelist(this.currentPage, this.pageSize).then((res) => {
         let arr = res.data.data;
         for (let obj of arr) {
-          obj.state = obj.state == 1 ? true : false;
+          obj.state = obj.state == 1
           obj.isedit = false;
         }
         this.tableData = arr;
