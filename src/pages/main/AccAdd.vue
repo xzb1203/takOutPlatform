@@ -10,7 +10,7 @@
         <el-input v-model="formLabelAlign.name"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="formLabelAlign.psw"></el-input>
+        <el-input v-model="formLabelAlign.psw" show-password></el-input>
       </el-form-item>
       <el-form-item label="用户组">
         <el-select v-model="form.region">

@@ -14,21 +14,19 @@
           <el-divider></el-divider>
         <span>创建时间:&emsp;{{$moment(msg.ctime).format('YYYY/MM/DD')}}</span>
         <el-divider></el-divider>
-        <span>
-          管理员头像:
+        <span class="headPic">
+          头像修改:
           <el-upload
-            class="avatar-uploader"
+            class="avatar-uploader el-upload"
             action="http://127.0.0.1:5000/users/avatar_upload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :data="uploaddata"
             >
-            
             <img v-if="msg.imgUrl" :src="msg.imgUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </span>
-        <el-divider></el-divider>
       </div>
     </el-card>
   </div>
@@ -97,9 +95,12 @@ export default {
   line-height: 178px;
   text-align: center;
 }
-// .avatar {
-//   width: 178px;
-//   height: 178px;
-//   display: block;
-// }
+.headPic{
+  display: flex;
+  align-items: center;
+}
+.el-upload{
+  margin-left: 10px;
+  display: inline;
+}
 </style>

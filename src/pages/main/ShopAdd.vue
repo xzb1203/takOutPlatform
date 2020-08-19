@@ -32,7 +32,7 @@
         </el-form-item>
         
         <el-form-item label="商品描述">
-          <el-input type="textarea" v-model="form.goodsDesc"></el-input>
+          <el-input type="textarea" v-model="form.goodsDesc" rows="5"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addMer">添加商品</el-button>
@@ -86,6 +86,9 @@ export default {
              if (res.data.code == 0) {
               // window.location.hash = '/main/ShopList'
               this.$message.success("商品添加成功!");
+              window.setTimeout(() => {
+                this.$router.push('/main/ShopList')
+              }, 1000);
              }
       });
     },

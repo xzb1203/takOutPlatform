@@ -42,7 +42,13 @@
       <el-table-column label="商品价格" prop="price"></el-table-column>
       <el-table-column label="商品图片" prop="imgUrl">
         <template scope="props">
-          <img :src="props.row.imgUrl" width="80" height="80" />
+          <el-tooltip class="item" effect="dark" content="点击查看大图" placement="top-start">
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="props.row.imgUrl"
+              :preview-src-list="srcList"
+            ></el-image>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="商品描述" prop="goodsDesc"></el-table-column>
@@ -135,6 +141,10 @@ export default {
         id: "",
       },
       formLabelWidth: "120px",
+      srcList: [
+        "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
+        "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg",
+      ],
     };
   },
   methods: {
@@ -230,17 +240,20 @@ export default {
             "http://127.0.0.1:5000/upload/imgs/goods_img/" + item.imgUrl;
           item.ctime = getChinatime(item.ctime);
         }
+        //大图预览
+        for (let items of res.data.data) {
+          this.srcList.push(items.imgUrl);
+        }
       });
     },
   },
   created() {
-      (this.loading = true),
-        //获取商品列表
-        this.getProduct();
-      //数据渲染
-      this.getList();
-      this.loading = false;
-
+    (this.loading = true),
+      //获取商品列表
+      this.getProduct();
+    //数据渲染
+    this.getList();
+    this.loading = false;
   },
 };
 </script>

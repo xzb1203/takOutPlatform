@@ -63,7 +63,7 @@
       </div>
       <!-- 分页end -->
       <!-- 查看弹窗star -->
-      <el-dialog title="订单详情" width="40%">
+      <el-dialog title="订单详情" :visible.sync="dialogFormVisible"  width="40%">
         <el-form :model="view">
           <el-form-item label="订单ID" :label-width="formLabelWidth">
             <span>{{view.id}}</span>
@@ -102,8 +102,8 @@
       <!-- 编辑弹窗start -->
       <el-dialog title="订单详情" :visible.sync="dialogFormVisible2" width="40%">
         <el-form :model="editobj">
-          <el-form-item label="订单ID" :label-width="formLabelWidth">
-            <el-input v-model="editobj.id"></el-input>
+          <el-form-item label="订单ID" :label-width="formLabelWidth" >
+            <el-input v-model="editobj.id" disabled></el-input>
           </el-form-item>
           <el-form-item label="订单号" :label-width="formLabelWidth">
             <el-input v-model="editobj.orderNo"></el-input>
@@ -173,6 +173,8 @@ export default {
       total: 50,
       //查看数据列表
       gridData: [],
+      dialogTableVisible: false,
+      dialogFormVisible: false,
       dialogTableVisible2: false,
       dialogFormVisible2: false,
       //查看页value值
@@ -211,11 +213,11 @@ export default {
         }
       });
     },
-
     //查看功能
     handleClick(row) {
       //显示编辑对话框
       //渲染数据到对话框
+      this.dialogFormVisible=true
       this.view = { ...row };
     },
     //每页显示条目个数

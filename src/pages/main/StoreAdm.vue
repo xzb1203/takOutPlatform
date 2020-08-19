@@ -176,6 +176,9 @@ export default {
           this.$message.error("店铺信息修改失败!");
         }
       });
+      //没有接口,无法实现更新店铺头像自动刷新主页的头像
+      //  this.$bus.$emit("shopLogo");
+
     },
   },
   created() {

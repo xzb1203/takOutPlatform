@@ -51,7 +51,7 @@ export default {
     //调用接口
     var myChart = this.$echarts.init(document.getElementById("content"));
     totaldata().then((res) => {
-      this.data={...res.data}
+      this.data = { ...res.data };
       // 基于准备好的dom，初始化echarts实例
       // 指定图表的配置项和数据
       let option = {
@@ -92,7 +92,6 @@ export default {
             stack: "总量",
             data: res.data.amountData,
           },
-
         ],
       };
 

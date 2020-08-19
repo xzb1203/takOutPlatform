@@ -2,14 +2,14 @@
   <div class="login">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span class="title">系统登录</span>
+        <span class="title">欧乐后台管理中心</span>
       </div>
       <div class="content">
         <p>
           <el-input v-model="user" prefix-icon="el-icon-user-solid" clearable></el-input>
         </p>
         <p>
-          <el-input v-model="psw" prefix-icon="el-icon-lock" show-password></el-input>
+          <el-input v-model="psw" prefix-icon="el-icon-lock" show-password @keyup.enter.native="submit"></el-input>
         </p>
         <p class="error">{{errormsg}}</p>
       </div>
@@ -30,14 +30,18 @@ export default {
     };
   },
   methods: {
+    submit(){
+      this.clikLogin()
+    },
     clikLogin() {
       login(this.user, this.psw).then((res) => {
+        console.log(res);
         if (res.data.code == 0) {
           //写入token
           localStorage.token = res.data.token; //写入token
           localStorage.role = res.data.role; //写入用户组
           localStorage.user = this.user; //存入用户名
-          localStorage.id =res.data.id; //存入用户名
+          localStorage.id = res.data.id; //存入用户名
           this.$router.push("/main/index"); //改变hash地址
           this.$message({
             message: "用户登录成功!",
@@ -55,7 +59,9 @@ export default {
 <style lang="less" scoped>
 .login {
   height: 100%;
-  background-color: #2d3a4b;
+  background: linear-gradient(#2d3a4b, 80%, #594a69);
+  // background-image: url(../../public/bg.jpg);
+  // background-size: 100% 100%;
   .el-card {
     width: 350px;
     position: absolute;
@@ -65,6 +71,7 @@ export default {
     text-align: center;
     .title {
       font-weight: bold;
+      font-size: 25px;
     }
   }
   .content {

@@ -2,15 +2,16 @@
   <el-container>
     <el-aside width="220px">
       <h1 class="shopName">
-        <i class="el-icon-platform-eleme"></i>欧乐超市商家中心
+        <!-- <i class="el-icon-platform-eleme"></i>欧乐商家中心 -->
+        <img :src="logo" alt style="width:50px; border-radius:50%" /><span class="logoText">欧乐商家中心</span>
       </h1>
       <!-- 左侧树菜单 -->
       <el-menu
         :default-active="isHash"
         class="el-menu-vertical-demo"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
+        background-color="#464e6b"
+        text-color="#DDDDDD"
+        active-text-color="#FFFFFF"
         router
         unique-opened
       >
@@ -60,7 +61,6 @@
             <el-menu-item index="/main/Order">订单统计</el-menu-item>
           </el-menu-item-group>
         </el-submenu>-->
-
         <div v-for="item in powerArr" :key="item.url">
           <!-- 如果循环对象没有子类就用此结构 -->
           <el-menu-item v-if="!item.children" :index="item.url">
@@ -93,7 +93,18 @@
           </el-breadcrumb>
         </div>
         <div class="right">
-          <span>{{username}}</span>
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link">
+              <!-- 下拉菜单 -->
+              <span style="color:#444444">{{'欢迎您,'+username}}</span>
+              <span class="el-icon-arrow-down"></span>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="个人信息">个人信息</el-dropdown-item>
+              <el-dropdown-item command="注销登录">注销登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <!-- 头像 -->
           <i>
             <img @click="clickPic" :src="mySrc" />
           </i>
@@ -110,12 +121,17 @@
 <script>
 import { checktoken } from "@/api/apis";
 import { accountinfo } from "@/api/apis";
+//店铺详情接口
+import { shopInfo } from "@/api/apis";
+
 export default {
   data() {
     return {
       username: "",
       isHash: "",
       mySrc: "",
+      //店铺头像
+      logo: "",
       list: [
         {
           url: "/main/index",
@@ -190,6 +206,15 @@ export default {
     //头像更新
     this.getPicChange();
     this.breadList = this.$route.meta.breadList;
+    //获取店铺详情接口
+    shopInfo().then((res) => {
+      this.logo = "http://127.0.0.1:5000/upload/shop/" + res.data.data.avatar;
+    });
+    //头像更新bus事件(没有这个接口,无法实现)
+    // this.$bus.$on("shopLogo", () => {
+      //头像更新
+     
+    // });
   },
   watch: {
     //面包屑导航监听
@@ -212,7 +237,7 @@ export default {
   },
   methods: {
     clickPic() {
-      location.hash = "/main/UserMsg";
+      this.$router.push("/main/UserMsg");
     },
     //头像图片接口
     getPicChange() {
@@ -220,12 +245,35 @@ export default {
         this.mySrc = res.data.accountInfo.imgUrl;
       });
     },
+    //个人信息下拉菜单
+    handleCommand(command) {
+      //个人信息
+      if (command == "个人信息") {
+        this.$router.push("/main/UserMsg");
+      }
+      //注销登录
+      if (command == "注销登录") {
+        this.$confirm("您确定要注销吗?", {
+          confirmButtonText: "取消",
+          cancelButtonText: "确定",
+          type: "warning",
+        })
+          .then(() => {
+            this.$message.success("欢迎回来!");
+          })
+          .catch(() => {
+            localStorage.clear();
+            this.$router.push("/");
+          });
+      }
+    },
+    //
   },
 };
 </script>
 
 <style lang="less">
-@base: #545c64;
+@base: #464e6b;
 @graybase: #f0f2f5;
 @cfff: #ffffff;
 .el-container {
@@ -236,7 +284,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
 }
 
 .el-aside {
@@ -251,6 +298,7 @@ export default {
 .el-menu {
   border: 0;
 }
+
 .right {
   display: flex;
   align-items: center;
@@ -265,6 +313,13 @@ export default {
       height: 50px;
     }
   }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409eff;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 }
 .shopName {
   display: flex;
@@ -276,6 +331,9 @@ export default {
   i {
     font-size: 30px;
     margin-right: 5px;
+  }
+  .logoText{
+    margin-left: 10px;
   }
 }
 </style>

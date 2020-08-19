@@ -197,6 +197,13 @@ export default {
 
     //删除账户功能
     async handleDelete(uid) {
+      console.log(uid);
+      //阻止用户删除当前登录的账户
+      if(uid==localStorage.id){
+        console.log('这是当前账户');
+        this.$message.error("不允许删除当前账户噢!");
+        return false
+      }
       let result = await this.$confirm(
         "此操作将永久删除该账户, 是否继续?",
         "提示",

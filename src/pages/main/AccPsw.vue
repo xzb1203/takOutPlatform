@@ -9,15 +9,15 @@
           <el-input v-model="formLabelAlign.oldPwd" @blur="input"></el-input>
         </el-form-item>
         <el-form-item label="新密码">
-          <el-input v-model="formLabelAlign.newPwd"></el-input>
+          <el-input v-model="formLabelAlign.newPwd" show-password></el-input>
         </el-form-item>
         <el-form-item label="确认密码">
-          <el-input v-model="formLabelAlign.affirmPwd"></el-input>
+          <el-input v-model="formLabelAlign.affirmPwd" show-password></el-input>
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item>
           <el-button type="primary" @click="submitForm">提交</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <!-- <el-button @click="resetForm">重置</el-button> -->
         </el-form-item>
       </el-form>
     </div>
@@ -77,9 +77,7 @@ export default {
         });
       }
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+
   },
 };
 </script>
