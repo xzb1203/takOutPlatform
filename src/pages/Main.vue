@@ -2,7 +2,6 @@
   <el-container>
     <el-aside width="220px">
       <h1 class="shopName">
-        <!-- <i class="el-icon-platform-eleme"></i>欧乐商家中心 -->
         <img :src="logo" alt style="width:50px; border-radius:50%" /><span class="logoText">欧乐商家中心</span>
       </h1>
       <!-- 左侧树菜单 -->
